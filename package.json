@@ -1,10 +1,14 @@
 {
-  "name": "new-component",
+  "name": "@chancestrickland/new-component",
   "version": "0.0.1",
   "description": "CLI for creating new React components",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chancestrickland/new-component"
   },
   "keywords": [
     "react",
@@ -12,14 +16,14 @@
     "cli",
     "component"
   ],
-  "author": "Joshua Comeau",
+  "author": "Chance Strickland",
   "license": "MIT",
   "bin": {
     "new-component": "./src/index.js"
   },
   "dependencies": {
-    "chalk": "2.0.1",
-    "commander": "2.11.0",
-    "prettier": "1.5.3"
+    "chalk": "2.1.0",
+    "commander": "2.16.0",
+    "prettier": "1.12.0"
   }
 }
