@@ -31,6 +31,7 @@ module.exports.getConfig = () => {
     type: 'class',
     dir: 'src/components',
     extension: 'js',
+    style: 'css',
   };
 
   const globalOverrides = requireOptional(
@@ -57,8 +58,8 @@ const colors = {
   darkGray: [90, 90, 90],
 };
 
-const logComponentType = selected =>
-  ['class', 'pure-class', 'functional']
+const logType = (arr, selected) =>
+  arr
     .sort((a, b) => (a === selected ? -1 : 1))
     .map(
       option =>
@@ -68,7 +69,16 @@ const logComponentType = selected =>
     )
     .join('  ');
 
-module.exports.logIntro = ({ name, dir, type }) => {
+const logComponentType = selected =>
+  logType(['class', 'pure-class', 'functional'], selected);
+
+const logStyleType = selected =>
+  logType(
+    ['css', 'scss', 'less', 'stylus', 'module.css', 'module.scss'],
+    selected
+  );
+
+module.exports.logIntro = ({ name, dir, type, style }) => {
   console.info('\n');
   console.info(
     `✨  Creating the ${chalk.bold.rgb(...colors.gold)(name)} component ✨`
@@ -77,9 +87,11 @@ module.exports.logIntro = ({ name, dir, type }) => {
 
   const pathString = chalk.bold.rgb(...colors.blue)(dir);
   const typeString = logComponentType(type);
+  const styleString = logStyleType(style);
 
   console.info(`Directory:  ${pathString}`);
   console.info(`Type:       ${typeString}`);
+  console.info(`Stylesheet: ${styleString}`);
   console.info(
     chalk.rgb(...colors.darkGray)('=========================================')
   );

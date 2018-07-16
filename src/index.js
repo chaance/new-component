@@ -76,7 +76,7 @@ export { default } from './${componentName}';
 // Simple stylesheet template.
 const styleTemplate = `.${componentName} {}`;
 
-logIntro({ name: componentName, dir: componentDir, type: program.type });
+logIntro({ name: componentName, dir: componentDir, type: program.type, style: program.style });
 
 // Check if componentName is provided
 if (!componentName) {
