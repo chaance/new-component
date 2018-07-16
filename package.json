@@ -1,6 +1,6 @@
 {
   "name": "@chancedigital/new-component",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "CLI for creating new React components",
   "main": "src/index.js",
   "scripts": {

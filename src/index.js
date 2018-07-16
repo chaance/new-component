@@ -65,7 +65,7 @@ const templatePath = `./templates/${program.type}.js`;
 // Get all of our file paths worked out, for the user's project.
 const componentDir = `${program.dir}/${componentName}`;
 const filePath = `${componentDir}/${componentName}.${program.extension}`;
-const indexPath = `${componentDir}/${componentName}.js`;
+const indexPath = `${componentDir}/index.js`;
 const stylePath = `${componentDir}/${componentName}.${program.style}`;
 
 // Our index template is super straightforward, so we'll just inline it for now.
@@ -134,12 +134,16 @@ mkDirPromise(componentDir)
     // We also need the `index.js` file, which allows easy importing.
     writeFilePromise(indexPath, prettify(indexTemplate))
   )
+  .then(template => {
+    logItemCompletion('Index file built and saved to disk.');
+    return template;
+  })
   .then(template =>
     // Create the stylesheet.
     writeFilePromise(stylePath, styleTemplate)
   )
   .then(template => {
-    logItemCompletion('Index file built and saved to disk.');
+    logItemCompletion('Stylesheet file built and saved to disk.');
     return template;
   })
   .then(template => {
