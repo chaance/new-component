@@ -49,6 +49,12 @@ program
     'Which file extension to use for the component (default: "js")',
     config.extension
   )
+  .option(
+    '-s, --style <styleExtension>',
+    'Which file extension to use for the component\'s CSS files (default: "css")',
+    /^(css||scss||less||stylus||module.css||module.scss)$/i,
+    config.style
+  )
   .parse(process.argv);
 
 const [componentName] = program.args;
@@ -59,12 +65,16 @@ const templatePath = `./templates/${program.type}.js`;
 // Get all of our file paths worked out, for the user's project.
 const componentDir = `${program.dir}/${componentName}`;
 const filePath = `${componentDir}/${componentName}.${program.extension}`;
-const indexPath = `${componentDir}/index.js`;
+const indexPath = `${componentDir}/${componentName}.js`;
+const stylePath = `${componentDir}/${componentName}.${program.style}`;
 
 // Our index template is super straightforward, so we'll just inline it for now.
 const indexTemplate = prettify(`\
 export { default } from './${componentName}';
 `);
+
+// Simple stylesheet template.
+const styleTemplate = `.${componentName} {}`;
 
 logIntro({ name: componentName, dir: componentDir, type: program.type });
 
@@ -101,10 +111,12 @@ mkDirPromise(componentDir)
     logItemCompletion('Directory created.');
     return template;
   })
-  .then(template =>
+  .then(template => {
     // Replace our placeholders with real data (so far, just the component name)
-    template.replace(/COMPONENT_NAME/g, componentName)
-  )
+    template.replace(/COMPONENT_NAME/g, componentName);
+    template.replace(/STYLE_EXT/g, program.style);
+    return template;
+  })
   .then(template =>
     // Format it using prettier, to ensure style consistency, and write to file.
     writeFilePromise(filePath, prettify(template))
@@ -116,6 +128,10 @@ mkDirPromise(componentDir)
   .then(template =>
     // We also need the `index.js` file, which allows easy importing.
     writeFilePromise(indexPath, prettify(indexTemplate))
+  )
+  .then(template =>
+    // Create the stylesheet.
+    writeFilePromise(stylePath, styleTemplate)
   )
   .then(template => {
     logItemCompletion('Index file built and saved to disk.');

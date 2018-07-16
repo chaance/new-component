@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://github.com/chancestrickland/new-component/blob/master/docs/logo@2x.png?raw=true" width="285" height="285" alt="new-component logo">
   <br>
-  <a href="https://www.npmjs.org/package/@chancestrickland/new-component"><img src="https://img.shields.io/npm/v/new-component.svg?style=flat" alt="npm"></a>
+  <a href="https://www.npmjs.org/package/@chancedigital/new-component"><img src="https://img.shields.io/npm/v/new-component.svg?style=flat" alt="npm"></a>
 </p>
 
 # `new-component`
@@ -30,10 +30,10 @@ Install via NPM:
 
 ```bash
 # Using Yarn:
-$ yarn global add @chancestrickland/new-component
+$ yarn global add @chancedigital/new-component
 
 # or, using NPM
-$ npm i -g @chancestrickland/new-component
+$ npm i -g @chancedigital/new-component
 ```
 
 `cd` into your project's directory, and try creating a new component:
