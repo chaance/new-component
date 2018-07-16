@@ -76,7 +76,12 @@ export { default } from './${componentName}';
 // Simple stylesheet template.
 const styleTemplate = `.${componentName} {}`;
 
-logIntro({ name: componentName, dir: componentDir, type: program.type, style: program.style });
+logIntro({
+  name: componentName,
+  dir: componentDir,
+  type: program.type,
+  style: program.style,
+});
 
 // Check if componentName is provided
 if (!componentName) {
@@ -111,12 +116,12 @@ mkDirPromise(componentDir)
     logItemCompletion('Directory created.');
     return template;
   })
-  .then(template => {
+  .then(template =>
     // Replace our placeholders with real data (so far, just the component name)
-    template.replace(/COMPONENT_NAME/g, componentName);
-    template.replace(/STYLE_EXT/g, program.style);
-    return template;
-  })
+    template
+      .replace(/COMPONENT_NAME/g, componentName)
+      .replace(/STYLE_EXT/g, program.style)
+  )
   .then(template =>
     // Format it using prettier, to ensure style consistency, and write to file.
     writeFilePromise(filePath, prettify(template))
