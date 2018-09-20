@@ -118,12 +118,12 @@ mkDirPromise(componentDir)
     logItemCompletion('Directory created.');
     return template;
   })
-  .then(template => {
+  .then(template =>
     // Replace our placeholders with real data (so far, just the component name)
     template
       .replace(/COMPONENT_NAME/g, componentName)
-      .replace(/STYLE_EXT/g, program.style);
-  })
+      .replace(/STYLE_EXT/g, program.style)
+  )
   .then(template => {
     if (!program.style.includes('module')) {
       return template.replace('import styles from', 'import');
