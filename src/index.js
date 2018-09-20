@@ -95,7 +95,9 @@ if (!componentName) {
 const fullPathToParentDir = path.resolve(program.dir);
 if (!fs.existsSync(fullPathToParentDir)) {
   logError(
-    `Sorry, you need to create a parent "components" directory.\n(new-component is looking for a directory at ${program.dir}).`
+    `Sorry, you need to create a parent "components" directory.\n(new-component is looking for a directory at ${
+      program.dir
+    }).`
   );
   process.exit(0);
 }
@@ -116,12 +118,18 @@ mkDirPromise(componentDir)
     logItemCompletion('Directory created.');
     return template;
   })
-  .then(template =>
+  .then(template => {
     // Replace our placeholders with real data (so far, just the component name)
     template
       .replace(/COMPONENT_NAME/g, componentName)
-      .replace(/STYLE_EXT/g, program.style)
-  )
+      .replace(/STYLE_EXT/g, program.style);
+  })
+  .then(template => {
+    if (!program.style.includes('module')) {
+      return template.replace('import styles from', 'import');
+    }
+    return template;
+  })
   .then(template =>
     // Format it using prettier, to ensure style consistency, and write to file.
     writeFilePromise(filePath, prettify(template))
