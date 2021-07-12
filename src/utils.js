@@ -1,14 +1,14 @@
-/*
-Utils are general building blocks. Platform-specific, but not
-application-specific
-
-They're useful for abstracting away the configuration for native methods,
-or defining new convenience methods for things like working with files,
-data munging, etc.
-
-NOTE: Utils should be general enough to be useful in any Node application.
-For application-specific concerns, use `helpers.js`.
-*/
+/**
+ * Utils are general building blocks. Platform-specific, but not
+ * application-specific
+ *
+ * They're useful for abstracting away the configuration for native methods, or
+ * defining new convenience methods for things like working with files, data
+ * munging, etc.
+ *
+ * NOTE: Utils should be general enough to be useful in any Node application.
+ * For application-specific concerns, use `helpers.js`.
+ */
 const fs = require("fs");
 const path = require("path");
 
@@ -17,8 +17,8 @@ module.exports.requireOptional = (filePath) => {
 		return require(filePath);
 	} catch (e) {
 		// We want to ignore 'MODULE_NOT_FOUND' errors, since all that means is that
-		// the user has not set up a global overrides file.
-		// All other errors should be thrown as expected.
+		// the user has not set up a global overrides file. All other errors should
+		// be thrown as expected.
 		if (e.code !== "MODULE_NOT_FOUND") {
 			throw e;
 		}

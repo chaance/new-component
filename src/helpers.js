@@ -1,17 +1,15 @@
-/*
-Helpers are application-specific functions.
-
-They're useful for abstracting away plumbing and other important-but-
-uninteresting parts of the code, specific to this codebase.
-
-NOTE: For generalized concerns that aren't specific to this project,
-use `utils.js` instead.
-*/
+/**
+ * Helpers are application-specific functions.
+ *
+ * They're useful for abstracting away plumbing and other important-but-
+ * uninteresting parts of the code, specific to this codebase.
+ *
+ * NOTE: For generalized concerns that aren't specific to this project, use
+ * `utils.js` instead.
+ */
 const os = require("os");
-
 const prettier = require("prettier");
 const chalk = require("chalk");
-
 const { requireOptional } = require("./utils");
 
 // Get the configuration for this component.
@@ -28,7 +26,7 @@ module.exports.getConfig = () => {
 	const currentPath = process.cwd();
 
 	const defaults = {
-		type: "class",
+		type: "functional",
 		dir: "src/components",
 		extension: "js",
 		style: "css",
@@ -46,7 +44,19 @@ module.exports.getConfig = () => {
 };
 
 module.exports.buildPrettifier = (prettierConfig) => (text) =>
-	prettier.format(text, prettierConfig);
+	prettier.format(text, {
+		parser: "babel",
+		...(prettierConfig || {}),
+	});
+
+module.exports.getStyleTemplate = (componentName, style) => {
+	switch (style) {
+		case "stylus":
+			return `.${componentName}\n`;
+		default:
+			return `.${componentName} {}\n`;
+	}
+};
 
 // Emit a message confirming the creation of the component
 const colors = {
@@ -107,7 +117,9 @@ module.exports.logConclusion = () => {
 	console.info("\n");
 	console.info(chalk.bold.rgb(...colors.green)("Component created! 🚀 "));
 	console.info(
-		chalk.rgb(...colors.mediumGray)("Thanks for using new-component.")
+		chalk.rgb(...colors.mediumGray)(
+			`Thanks for using ${chalk.bold("@chancedigital/new-component.")}`
+		)
 	);
 	console.info("\n");
 };

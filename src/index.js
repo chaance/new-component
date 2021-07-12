@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 const fs = require("fs");
 const path = require("path");
-
-const program = require("commander");
-
+const { Command, Option } = require("commander");
 const {
 	getConfig,
+	getStyleTemplate,
 	buildPrettifier,
 	logIntro,
 	logItemCompletion,
@@ -25,47 +24,57 @@ const { version } = require("../package.json");
 // falls back to sensible defaults).
 const config = getConfig();
 
-// Convenience wrapper around Prettier, so that config doesn't have to be
-// passed every time.
+// Convenience wrapper around Prettier, so that config doesn't have to be passed
+// every time.
 const prettify = buildPrettifier(config.prettierConfig);
+
+const program = new Command();
 
 program
 	.version(version)
-	.arguments("<componentName>")
-	.option(
-		"-t, --type <componentType>",
-		'Type of React component to generate (default: "class")',
-		/^(class|pure-class|functional)$/i,
-		config.type
+	.argument("<componentName>")
+	.addOption(
+		new Option(
+			"-t, --type <componentType>",
+			`Type of React component to generate`
+		)
+			.choices(["class", "pure-class", "functional"])
+			.default(config.type)
 	)
 	.option(
 		"-d, --dir <pathToDirectory>",
-		'Path to the "components" directory (default: "src/components")',
+		`Path to the "components" directory`,
 		config.dir
 	)
 	.option(
 		"-x, --extension <fileExtension>",
-		'Which file extension to use for the component (default: "js")',
+		`Which file extension to use for the component`,
 		config.extension
 	)
-	.option(
-		"-s, --style <styleExtension>",
-		'Which file extension to use for the component\'s CSS files (default: "css")',
-		/^(css||scss||less||stylus||module.css||module.scss)$/i,
-		config.style
-	)
-	.parse(process.argv);
+	.addOption(
+		new Option(
+			"-s, --style <styleExtension>",
+			`Which file extension to use for the component's CSS files`
+		)
+			.choices(["css", "scss", "less", "stylus", "module.css", "module.scss"])
+			.default(config.style)
+	);
+
+program.parse(process.argv);
+
+//.parse(process.argv);
 
 const [componentName] = program.args;
+const options = program.opts();
 
 // Find the path to the selected template file.
-const templatePath = `./templates/${program.type}.js`;
+const templatePath = `./templates/${options.type}.js`;
 
 // Get all of our file paths worked out, for the user's project.
-const componentDir = `${program.dir}/${componentName}`;
-const filePath = `${componentDir}/${componentName}.${program.extension}`;
+const componentDir = `${options.dir}/${componentName}`;
+const filePath = `${componentDir}/${componentName}.${options.extension}`;
 const indexPath = `${componentDir}/index.js`;
-const stylePath = `${componentDir}/${componentName}.${program.style}`;
+const stylePath = `${componentDir}/${componentName}.${options.style}`;
 
 // Our index template is super straightforward, so we'll just inline it for now.
 const indexTemplate = prettify(`\
@@ -73,13 +82,13 @@ export { default } from './${componentName}';
 `);
 
 // Simple stylesheet template.
-const styleTemplate = `.${componentName} {}`;
+const styleTemplate = getStyleTemplate(componentName, options.style);
 
 logIntro({
 	name: componentName,
 	dir: componentDir,
-	type: program.type,
-	style: program.style,
+	type: options.type,
+	style: options.style,
 });
 
 // Check if componentName is provided
@@ -91,10 +100,10 @@ if (!componentName) {
 }
 
 // Check to see if a directory at the given path exists
-const fullPathToParentDir = path.resolve(program.dir);
+const fullPathToParentDir = path.resolve(options.dir);
 if (!fs.existsSync(fullPathToParentDir)) {
 	logError(
-		`Sorry, you need to create a parent "components" directory.\n(new-component is looking for a directory at ${program.dir}).`
+		`Sorry, you need to create a parent "components" directory.\n(new-component is looking for a directory at ${options.dir}).`
 	);
 	process.exit(0);
 }
@@ -117,12 +126,12 @@ mkDirPromise(componentDir)
 	})
 	.then((template) => {
 		// Replace our placeholders with real data (so far, just the component name)
-		if (!program.style.includes("module")) {
+		if (!options.style.includes("module")) {
 			template = template.replace("import styles from", "import");
 		}
 		return template
 			.replace(/COMPONENT_NAME/g, componentName)
-			.replace(/STYLE_EXT/g, program.style);
+			.replace(/STYLE_EXT/g, options.style);
 	})
 	.then((template) =>
 		// Format it using prettier, to ensure style consistency, and write to file.
