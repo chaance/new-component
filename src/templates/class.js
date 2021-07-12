@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import styles from './COMPONENT_NAME.STYLE_EXT';
+import React, { Component } from "react";
+import styles from "./COMPONENT_NAME.STYLE_EXT";
 
 class COMPONENT_NAME extends Component {
-  render() {
-    return <div />;
-  }
+	render() {
+		return <div />;
+	}
 }
 
 export default COMPONENT_NAME;
