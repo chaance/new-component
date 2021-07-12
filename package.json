@@ -1,29 +1,52 @@
 {
-  "name": "@chancedigital/new-component",
-  "version": "1.1.2",
-  "description": "CLI for creating new React components",
-  "main": "src/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/chancestrickland/new-component"
-  },
-  "keywords": [
-    "react",
-    "reactjs",
-    "cli",
-    "component"
-  ],
-  "author": "Chance Strickland",
-  "license": "MIT",
-  "bin": {
-    "new-component": "./src/index.js"
-  },
-  "dependencies": {
-    "chalk": "2.1.0",
-    "commander": "2.16.0",
-    "prettier": "1.12.0"
-  }
+	"name": "@chancedigital/new-component",
+	"version": "1.1.2",
+	"description": "CLI for creating new React components",
+	"main": "src/index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chancestrickland/new-component"
+	},
+	"keywords": [
+		"react",
+		"reactjs",
+		"cli",
+		"component",
+		"boilerplate"
+	],
+	"author": "Chance Strickland",
+	"license": "MIT",
+	"bin": {
+		"new-component": "./src/index.js"
+	},
+	"dependencies": {
+		"chalk": "4.1.1",
+		"commander": "8.0.0",
+		"prettier": "2.3.2"
+	},
+	"devDependencies": {
+		"@babel/eslint-parser": "^7.14.7",
+		"@chancedigital/eslint-config": "^9.0.0",
+		"eslint": "^7.30.0",
+		"eslint-plugin-import": "^2.23.4",
+		"eslint-plugin-node": "^11.1.0"
+	},
+	"eslintConfig": {
+		"extends": [
+			"@chancedigital/eslint-config/node"
+		]
+	},
+	"eslintIgnore": [
+		"src/templates"
+	],
+	"prettier": {
+		"useTabs": true,
+		"tabWidth": 2
+	},
+	"engines": {
+		"node": ">=12"
+	}
 }
