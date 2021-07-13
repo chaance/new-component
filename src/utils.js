@@ -1,5 +1,9 @@
-const fs = require("fs");
-const { access, lstat, readFile } = require("fs/promises");
+const {
+	access,
+	lstat,
+	readFile,
+	constants: FS_CONSTANTS,
+} = require("fs-extra");
 const path = require("path");
 
 /**
@@ -50,7 +54,7 @@ async function isDirectory(path) {
  */
 async function fileExists(path) {
 	try {
-		await access(path, fs.constants.F_OK);
+		await access(path, FS_CONSTANTS.F_OK);
 		return !(await isDirectory(path));
 	} catch (err) {
 		return false;
@@ -63,7 +67,7 @@ async function fileExists(path) {
  */
 async function directoryExists(path) {
 	try {
-		await access(path, fs.constants.F_OK);
+		await access(path, FS_CONSTANTS.F_OK);
 		return await isDirectory(path);
 	} catch (err) {
 		return false;

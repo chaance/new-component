@@ -1,6 +1,6 @@
 const os = require("os");
 const path = require("path");
-const { mkdir } = require("fs/promises");
+const { mkdir } = require("fs-extra");
 const prettier = require("prettier");
 const chalk = require("chalk");
 const { requireOptional, directoryExists } = require("./utils");

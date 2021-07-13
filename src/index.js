@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const { writeFile } = require("fs/promises");
+const { writeFile } = require("fs-extra");
 const path = require("path");
 const { Command, Option } = require("commander");
 const {
