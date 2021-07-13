@@ -1,18 +1,12 @@
-/**
- * Utils are general building blocks. Platform-specific, but not
- * application-specific
- *
- * They're useful for abstracting away the configuration for native methods, or
- * defining new convenience methods for things like working with files, data
- * munging, etc.
- *
- * NOTE: Utils should be general enough to be useful in any Node application.
- * For application-specific concerns, use `helpers.js`.
- */
 const fs = require("fs");
+const { access, lstat, readFile } = require("fs/promises");
 const path = require("path");
 
-module.exports.requireOptional = (filePath) => {
+/**
+ * @param {string} filePath
+ * @returns {NodeRequire}
+ */
+function requireOptional(filePath) {
 	try {
 		return require(filePath);
 	} catch (e) {
@@ -23,34 +17,61 @@ module.exports.requireOptional = (filePath) => {
 			throw e;
 		}
 	}
-};
+}
 
-module.exports.mkDirPromise = (dirPath) =>
-	new Promise((resolve, reject) => {
-		fs.mkdir(dirPath, (err) => {
-			err ? reject(err) : resolve();
-		});
-	});
+/**
+ * Somewhat counter-intuitively, `fs.readFile` works relative to the current
+ * working directory (if the user is in their own project, it's relative to
+ * their project). This is unlike `require()` calls, which are always relative
+ * to the code's directory.
+ *
+ * @param {string} fileLocation
+ * @returns {Promise<string>}
+ */
+async function readFileRelative(fileLocation) {
+	return await readFile(path.join(__dirname, fileLocation), "utf-8");
+}
 
-// Simple promise wrappers for read/write files.
-// utf-8 is assumed.
-module.exports.readFilePromise = (fileLocation) =>
-	new Promise((resolve, reject) => {
-		fs.readFile(fileLocation, "utf-8", (err, text) => {
-			err ? reject(err) : resolve(text);
-		});
-	});
+/**
+ * @param {string} string
+ * @returns {Promise<boolean>}
+ */
+async function isDirectory(path) {
+	try {
+		return (await lstat(path)).isDirectory();
+	} catch (err) {
+		return false;
+	}
+}
 
-module.exports.writeFilePromise = (fileLocation, fileContent) =>
-	new Promise((resolve, reject) => {
-		fs.writeFile(fileLocation, fileContent, "utf-8", (err) => {
-			err ? reject(err) : resolve();
-		});
-	});
+/**
+ * @param {string} path
+ * @returns {Promise<boolean>}
+ */
+async function fileExists(path) {
+	try {
+		await access(path, fs.constants.F_OK);
+		return !(await isDirectory(path));
+	} catch (err) {
+		return false;
+	}
+}
 
-// Somewhat counter-intuitively, `fs.readFile` works relative to the current
-// working directory (if the user is in their own project, it's relative to
-// their project). This is unlike `require()` calls, which are always relative
-// to the code's directory.
-module.exports.readFilePromiseRelative = (fileLocation) =>
-	module.exports.readFilePromise(path.join(__dirname, fileLocation));
+/**
+ * @param {string} string
+ * @returns {Promise<boolean>}
+ */
+async function directoryExists(path) {
+	try {
+		await access(path, fs.constants.F_OK);
+		return await isDirectory(path);
+	} catch (err) {
+		return false;
+	}
+}
+
+module.exports.directoryExists = directoryExists;
+module.exports.fileExists = fileExists;
+module.exports.isDirectory = isDirectory;
+module.exports.readFileRelative = readFileRelative;
+module.exports.requireOptional = requireOptional;

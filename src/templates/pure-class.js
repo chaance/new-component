@@ -1,10 +1,11 @@
-import React, { PureComponent } from "react";
+import * as React from "react";
 import styles from "./COMPONENT_NAME.STYLE_EXT";
 
-class COMPONENT_NAME extends PureComponent {
+class COMPONENT_NAME extends React.PureComponent {
 	render() {
-		return <div />;
+		let props = this.props;
+		return <div {...props} />;
 	}
 }
 
-export default COMPONENT_NAME;
+export { COMPONENT_NAME };

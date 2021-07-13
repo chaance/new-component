@@ -1,8 +1,8 @@
-import React from "react";
+import * as React from "react";
 import styles from "./COMPONENT_NAME.STYLE_EXT";
 
-const COMPONENT_NAME = () => {
+const COMPONENT_NAME = (props) => {
 	return <div />;
 };
 
-export default COMPONENT_NAME;
+export { COMPONENT_NAME };

@@ -1,10 +1,11 @@
-import React, { Component } from "react";
+import * as React from "react";
 import styles from "./COMPONENT_NAME.STYLE_EXT";
 
-class COMPONENT_NAME extends Component {
+class COMPONENT_NAME extends React.Component {
 	render() {
-		return <div />;
+		let props = this.props;
+		return <div {...props} />;
 	}
 }
 
-export default COMPONENT_NAME;
+export { COMPONENT_NAME };
