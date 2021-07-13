@@ -15,6 +15,7 @@ const {
 	logItemCompletion,
 } = require("./helpers");
 const { fileExists, directoryExists, readFileRelative } = require("./utils");
+const { choices } = require("./constants");
 
 run();
 
@@ -79,7 +80,7 @@ function createProgram(args, config) {
 				"-t, --type <componentType>",
 				`Type of React component to generate`
 			)
-				.choices(["class", "pure-class", "functional"])
+				.choices(choices.type)
 				.default(config.type)
 		)
 		.option(
@@ -97,7 +98,7 @@ function createProgram(args, config) {
 				"-x, --extension <fileExtension>",
 				`The file extension to use for the component`
 			)
-				.choices(["js", "tsx"])
+				.choices(choices.extension)
 				.default(config.extension)
 		)
 		.addOption(
@@ -105,15 +106,7 @@ function createProgram(args, config) {
 				"-s, --style <styleExtension>",
 				`The file extension to use for the component's CSS file`
 			)
-				.choices([
-					"css",
-					"scss",
-					"less",
-					"stylus",
-					"module.css",
-					"module.scss",
-					"NONE",
-				])
+				.choices(choices.style)
 				.default(config.style)
 		);
 
@@ -128,10 +121,10 @@ function createProgram(args, config) {
 /**
  * @param {string} componentName
  * @param {{
- *   extension: 'tsx'|'js';
+ *   extension: typeof choices.extension[number];
  *   index: boolean;
- *   style: string;
- *   type: 'functional'|'class'|'pure-class'
+ *   style: typeof choices.style[number];
+ *   type: typeof choices.type[number];
  * }} options
  * @returns
  */
@@ -210,7 +203,7 @@ function ensureComponentName(componentName) {
 /**
  * Check to see if this component has already been created
  * @param {*} componentName
- * @param {{ index: boolean; extension: 'js'|'tsx' }} options
+ * @param {{ index: boolean; extension: typeof choices.extension[number] }} options
  */
 async function ensureNewComponent(componentName, options) {
 	let componentDir = getComponentPath(componentName, options);

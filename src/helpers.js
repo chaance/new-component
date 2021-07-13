@@ -3,16 +3,8 @@ const path = require("path");
 const { mkdir } = require("fs-extra");
 const prettier = require("prettier");
 const chalk = require("chalk");
-const { requireOptional, directoryExists } = require("./utils");
-
-const colors = {
-	red: [216, 16, 16],
-	green: [142, 215, 0],
-	blue: [0, 186, 255],
-	gold: [255, 204, 0],
-	mediumGray: [128, 128, 128],
-	darkGray: [90, 90, 90],
-};
+const { requireOptional, directoryExists, rainbowize } = require("./utils");
+const { choices, defaults } = require("./constants");
 
 /**
  * @param {string} componentName
@@ -52,13 +44,6 @@ function getComponentPath(componentName, options) {
 function getConfig() {
 	const home = os.homedir();
 	const currentPath = process.cwd();
-	const defaults = {
-		type: "functional",
-		dir: "src/components",
-		extension: "js",
-		style: "css",
-		index: false,
-	};
 
 	const globalOverrides = requireOptional(
 		`/${home}/.new-component-config.json`
@@ -111,58 +96,62 @@ function logType(arr, selected) {
 		.sort((a) => (a === selected ? -1 : 1))
 		.map((option) =>
 			option === selected
-				? `${chalk.bold.rgb(...colors.blue)(option)}`
-				: `${chalk.rgb(...colors.darkGray)(option)}`
+				? `${chalk.bold.cyan(option)}`
+				: `${chalk.blackBright(option)}`
 		)
 		.join("  ");
 }
 
 function logComponentType(selected) {
-	return logType(["class", "pure-class", "functional"], selected);
+	return logType(choices.type, selected);
 }
 
 function logStyleType(selected) {
 	return logType(
-		["css", "scss", "less", "stylus", "module.css", "module.scss"],
+		choices.style.filter((s) => s !== "NONE"),
 		selected
 	);
 }
 
-function logIntro({ name, dir, type, style }) {
+function logExtensionType(selected) {
+	return logType(choices.extension, selected);
+}
+
+function logIntro({ name, dir, type, style, extension }) {
 	console.info("\n");
-	console.info(
-		`✨  Creating the ${chalk.bold.rgb(...colors.gold)(name)} component ✨`
-	);
+	console.info(`✨ Creating the ${chalk.bold.yellow(name)} component ✨`);
 	console.info("\n");
 
-	const pathString = chalk.bold.rgb(...colors.blue)(dir);
+	const pathString = chalk.bold.cyan(dir);
 	const typeString = logComponentType(type);
+	const extensionString = logExtensionType(extension);
 	const styleString =
 		style && style.toUpperCase().trim() !== "NONE" ? logStyleType(style) : null;
 
 	console.info(`Directory:  ${pathString}`);
 	console.info(`Type:       ${typeString}`);
+	console.info(`Extension:  ${extensionString}`);
 	if (styleString) {
 		console.info(`Stylesheet: ${styleString}`);
 	}
-	console.info(
-		chalk.rgb(...colors.darkGray)("=========================================")
-	);
+	console.info(chalk.blackBright("========================================="));
 
 	console.info("\n");
 }
 
 function logItemCompletion(successText) {
-	const checkmark = chalk.rgb(...colors.green)("✓");
+	const checkmark = chalk.greenBright("✓");
 	console.info(`${checkmark} ${successText}`);
 }
 
 function logConclusion() {
 	console.info("\n");
-	console.info(chalk.bold.rgb(...colors.green)("Component created! 🚀 "));
+	console.info(chalk.bold.greenBright("Component created! 🚀 "));
 	console.info(
-		chalk.rgb(...colors.mediumGray)(
-			`Thanks for using ${chalk.bold("@chancedigital/new-component.")}`
+		chalk.white(
+			`Thanks for using ${chalk.bold(
+				rainbowize("@chancedigital/new-component")
+			)}!`
 		)
 	);
 	console.info("\n");
@@ -170,8 +159,8 @@ function logConclusion() {
 
 function logError(error) {
 	console.info("\n");
-	console.info(chalk.bold.rgb(...colors.red)("Error creating component."));
-	console.info(chalk.rgb(...colors.red)(error));
+	console.info(chalk.bold.red("Error creating component."));
+	console.info(chalk.red(error));
 	console.info("\n");
 }
 
