@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/chaance/new-component/blob/master/docs/logo@2x.png?raw=true" width="285" height="285" alt="new-component logo">
+  <img src="https://github.com/chaance/new-component/blob/main/docs/logo@2x.png?raw=true" width="285" height="285" alt="new-component logo">
   <br>
   <a href="https://www.npmjs.org/package/@chancedigital/new-component"><img src="https://img.shields.io/npm/v/@chancedigital/new-component.svg?style=flat" alt="npm"></a>
 </p>
@@ -8,7 +8,7 @@
 
 ### Simple, customizable utility for adding new React components to your project.
 
-<img src="https://github.com/chancestrickland/new-component/blob/master/docs/divider@2x.png?raw=true" width="888" height="100" role="presentation">
+<img src="https://github.com/chaance/new-component/blob/main/docs/divider@2x.png?raw=true" width="888" height="100" role="presentation">
 
 Anyone else sick of writing the same component boilerplate, over and over?
 
@@ -45,7 +45,7 @@ $ npm i -g @chancedigital/new-component
 `cd` into your project's directory, and try creating a new component:
 
 <p align="center">
-  <img src="https://github.com/chancestrickland/new-component/blob/master/docs/demo.gif?raw=true" width="888" height="369" alt="demo of CLI functionality">
+  <img src="https://github.com/chaance/new-component/blob/main/docs/demo.gif?raw=true" width="888" height="369" alt="demo of CLI functionality">
 </p>
 
 By default, the new component will be created in the `src/components` directory relative to the directory from which the command is run, but you have a few options.
