@@ -1,10 +1,11 @@
 <p align="center">
-  <img src="https://github.com/chancestrickland/new-component/blob/master/docs/logo@2x.png?raw=true" width="285" height="285" alt="new-component logo">
+  <img src="https://github.com/chaance/new-component/blob/master/docs/logo@2x.png?raw=true" width="285" height="285" alt="new-component logo">
   <br>
-  <a href="https://www.npmjs.org/package/@chancedigital/new-component"><img src="https://img.shields.io/npm/v/new-component.svg?style=flat" alt="npm"></a>
+  <a href="https://www.npmjs.org/package/@chancedigital/new-component"><img src="https://img.shields.io/npm/v/@chancedigital/new-component.svg?style=flat" alt="npm"></a>
 </p>
 
-# `new-component`
+# `@chancedigital/new-component`
+
 ### Simple, customizable utility for adding new React components to your project.
 
 <img src="https://github.com/chancestrickland/new-component/blob/master/docs/divider@2x.png?raw=true" width="888" height="100" role="presentation">
@@ -16,17 +17,22 @@ This project is a globally-installable CLI for adding new React components. It's
 <br />
 
 ## Features
-- Simple CLI interface for adding Component, PureComponent, or Stateless Functional components.
+
+- Simple CLI interface for adding various flavors of React components:
+  - Function components
+  - Components with forwarded refs\*
+  - `React.Component` class
+  - `React.PureComponent` class
 - Uses [Prettier](https://github.com/prettier/prettier) to stylistically match the existing project.
 - Offers global config, which can be overridden on a project-by-project basis.
-- Colourful terminal output!
+- Colorful terminal output!
+- Now supports TypeScript!\*
 
+\* Supported as-of version 2.0
 
-<br />
+<hr />
 
 ## Quickstart
-
-Install via NPM:
 
 ```bash
 # Using Yarn:
@@ -42,44 +48,23 @@ $ npm i -g @chancedigital/new-component
   <img src="https://github.com/chancestrickland/new-component/blob/master/docs/demo.gif?raw=true" width="888" height="369" alt="demo of CLI functionality">
 </p>
 
+By default, the new component will be created in the `src/components` directory relative to the directory from which the command is run, but you have a few options.
+
+If you pass the `--index` argument, the component will be saved along with its stylesheet and an `index` file in its own sub-directory. This might be useful if you are building a particularly large component with multiple sub-files and you feel better organizing things this way. **Prior to version 2 this was the default behavior, but I generally prefer flat folder structures so this is now opt-in.**
+
 Your project will now have a new directory at `src/components/Button`. This directory has two files:
-
-```jsx
-// `Button/index.js`
-export { default } from './Button';
-```
-
-```jsx
-// `Button/Button.js`
-import React, { Component } from 'react';
-
-class Button extends Component {
-  render() {
-    return <div />;
-  }
-}
-
-export default Button;
-```
-
-> This structure might appear odd to you, with an `index.js` that points to a named file. I've found this to be an optimal way to set up components; the `index.js` allows you to `import` from the directory (eg. `import Button from 'components/Button'`), while having `Button.js` means that you're never lost in a sea of `index.js` files in your editor.
->
-> This structure is not currently configurable, but I'm happy to consider implementing alternatives!
-
 
 <br />
 
 ## Configuration
 
-Configuration can be done through 3 different ways:
+Configuration can be done three different ways:
 
 - Creating a global `.new-component-config.json` in your home directory (`~/.new-component-config.json`).
 - Creating a local `.new-component-config.json` in your project's root directory.
 - Command-line arguments.
 
 The resulting values are merged, with command-line values overwriting local values, and local values overwriting global ones.
-
-
 
 <br />
 
@@ -88,11 +73,11 @@ The resulting values are merged, with command-line values overwriting local valu
 ### Type
 
 Control the type of component created:
-- `class` for a traditional Component class (default),
-- `pure-class` for a PureComponent class,
-- `functional` for a stateless functional component.
 
-Legacy `createClass` components are not supported, although support would be easy to add. Feel free to open an issue (or a PR!).
+- `functional` for a functional component (_default_),
+- `forward-ref` for a functional component with a forwarded ref,
+- `class` for a traditional `Component` class, or
+- `pure-class` for a `PureComponent` class,
 
 **Usage:**
 
@@ -105,8 +90,6 @@ JSON config: `{ "type": <value> }`
 
 Controls the desired directory for the created component. Defaults to `src/components`
 
-Legacy `createClass` components are not supported, although support would be easy to add. Feel free to open an issue (or a PR!).
-
 **Usage:**
 
 Command line: `--dir <value>` or `-d <value>`
@@ -114,15 +97,45 @@ Command line: `--dir <value>` or `-d <value>`
 JSON config: `{ "dir": <value> }`
 <br />
 
+### Style
+
+Controls the type of style file created for the component:
+
+- `css` (_default_),
+- `scss`,
+- `less`,
+- `stylus`,
+- `module.css`,
+- `module.scss`, or
+- `NONE` for no stylesheet
+
+**Usage:**
+
+Command line: `--style <value>` or `-s <value>`
+
+JSON config: `{ "style": <value> }`
+<br />
+
 ### File Extension
 
-Controls the file extension for the created components. Can be either `js` (default) or `jsx`.
+Controls the file extension for the created components. Can be either `js` (_default_) or `tsx` for TypeScript components.
 
 **Usage:**
 
 Command line: `--extension <value>` or `-x <value>`
 
 JSON config: `{ "extension": <value> }`
+<br />
+
+### Index
+
+Controls whether or not the component is created in its own sub-directory with an `index` file. Defaults to `false`.
+
+**Usage:**
+
+Command line: `--index` or `-i`
+
+JSON config: `{ "index": true|false }`
 <br />
 
 ### Prettier Config
@@ -148,10 +161,12 @@ JSON config: `{ "prettierConfig": { "key": "value" } }`
   }
 }
 ```
+
 <br />
 
 ## Platform Support
-This has only been tested in macOS. I think it'd work fine in linux, but I haven't tested it. Windows is a big question mark (would welcome contribution here!).
+
+This has only been tested in macOS. I think it'd work fine in linux, but I haven't tested it. Windows is a big question mark (would welcome contributions here!).
 
 <br />
 
@@ -159,14 +174,15 @@ This has only been tested in macOS. I think it'd work fine in linux, but I haven
 
 This is a brand new thing! I'd like to add more functionality:
 
-- Built-in support for common style tools (CSS modules, Aphrodite, styled-components, etc).
+- Built-in support for more style tools (Aphrodite, styled-components, etc).
 - Better error messaging, more edge-case support
 - Editor integrations :o
 
 ## Development
 
 To get started with development:
-* Check out this git repo locally; you will need to ensure you have `npm` installed globally.
-* In the folder run `npm install`
-* Check that command runs `node ../new-component/src/index.js --help`
-* Alternatively you can set up a symlink override by running `npm link` then `new-component --help`. Note: this will override any globally installed version of this package.
+
+- Check out this git repo locally; you will need to ensure you have `npm` installed globally.
+- In the folder run `npm install`
+- Check that command runs `node ../new-component/src/index.js --help`
+- Alternatively you can set up a symlink override by running `npm link` then `new-component --help`. Note: this will override any globally installed version of this package.
